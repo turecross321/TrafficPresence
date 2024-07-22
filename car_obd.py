@@ -6,6 +6,7 @@ import json
 DISCORD_CLIENT_ID = "1258728548613619733"
 SERVER_PASSWORD = "password"
 SERVER_URL = "ws://127.0.0.1:8080"
+UPDATE_INTERVAL = 15 # can't be less than 15 seconds to work
 
 supported_models = {"skoda-fabia": "Skoda Fabia",
                   "skoda-octavia": "Skoda Octavia"}
@@ -22,12 +23,6 @@ print(f"{current_model_name} has been selected")
 print("Connecting to OBD device")
 connection = obd.OBD()
 
-if connection.is_connected():
-    print("Connected to OBD adapter")
-else:
-    print("Unable to connect")
-    exit()
-
 
 CLIENT_TYPE_SENDER = 1
 
@@ -40,6 +35,13 @@ ws = create_connection(SERVER_URL, header={
 print("Connected to Presence Server")
 
 while True:
+    if connection.is_connected():
+        print("Connected to OBD adapter")
+    else:
+        print(f"Unable to connect to OBD adapter. Attempting to reconnect in {UPDATE_INTERVAL} seconds...")
+        time.sleep(UPDATE_INTERVAL)
+        break
+
     rpm = connection.query(obd.commands.RPM).value.magnitude
     speed = connection.query(obd.commands.SPEED).value.magnitude
     run_time = connection.query(obd.commands.RUN_TIME).value.magnitude
@@ -62,4 +64,4 @@ while True:
     print(serialized)
     ws.send(serialized)
     print("Updated presence")
-    time.sleep(15)
+    time.sleep(UPDATE_INTERVAL)
