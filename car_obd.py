@@ -4,8 +4,6 @@ import time
 import json
 
 DISCORD_CLIENT_ID = "1258728548613619733"
-OBD_PORT = "COM12"
-OBD_BAUD_RATE = 9600
 SERVER_PASSWORD = "password"
 SERVER_URL = "ws://127.0.0.1:8080"
 
@@ -22,7 +20,7 @@ current_model_name = supported_models[current_model_key]
 print(f"{current_model_name} has been selected")
 
 print("Connecting to OBD device")
-connection = obd.OBD(portstr=OBD_PORT, baudrate=OBD_BAUD_RATE)
+connection = obd.OBD()
 
 if connection.is_connected():
     print("Connected to OBD adapter")
