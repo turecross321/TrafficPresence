@@ -2,22 +2,29 @@ import obd
 from websocket import create_connection
 import time
 import json
+import argparse
 
 DISCORD_CLIENT_ID = "1258728548613619733"
 SERVER_PASSWORD = "password"
 SERVER_URL = "ws://127.0.0.1:8080"
 UPDATE_INTERVAL = 15 # can't be less than 15 seconds to work
+SUPPORTED_MODELS = {"skoda-fabia": "Skoda Fabia",
+                  "skoda-octavia": "Skoda Octavia",
+                  "car": "Car"}
 
-supported_models = {"skoda-fabia": "Skoda Fabia",
-                  "skoda-octavia": "Skoda Octavia"}
+parser = argparse.ArgumentParser()
+parser.add_argument('--model', type=str, help='The name of the model')
+args = parser.parse_args()
 
-print("Choose your current vehicle:")
-for model in supported_models:
-    print(f"- {model}")
+# Access the model argument
+if args.model:
+    current_model_key = args.model
+else:
+    print('No model specified. Choosing default `car`.')
+    print("Supported models:", SUPPORTED_MODELS)
+    current_model_key = "car"
 
-current_model_key = input("Current vehicle: ")
-current_model_name = supported_models[current_model_key]
-
+current_model_name = SUPPORTED_MODELS[current_model_key]
 print(f"{current_model_name} has been selected")
 
 print("Connecting to OBD device")
