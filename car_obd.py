@@ -52,7 +52,7 @@ while True:
 
     message = {
             "state": "Driving",
-            "details": f"{speed} km/h | {rpm} RPM | {fuel_level} fuel | {temperature}° C",
+            "details": f"{int(speed)} km/h | {int(rpm)} RPM | {int(fuel_level)}% fuel | {temperature}° C",
             "timestamps": {"stdiart": start},
             "assets": {
                 "large_image": current_model_key, 
