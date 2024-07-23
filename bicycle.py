@@ -1,48 +1,41 @@
-# WONT WORK WITH LATER THAN PYTHON 3.10
-
-from pyfirmata import Arduino, util
+import RPi.GPIO as GPIO
 import time
 
-WHEEL_ANALOG_PIN = 0
-WHEEL_CIRCUMEFRENCE = 2.44 # in meters
+# Set up GPIO 23 as an input (physical pin 16)
+SPEED_SENSOR = 23
+POLLING_DELAY = 0.1
+WHEEL_CIRCUMFERENCE = 2.4 # In meters
+STOPPED_THRESHOLD = 3 # Amount of seconds before assuming that the bicycle has stopped moving
 
-board = Arduino('COM7')
-wheel_sensor = board.get_pin(f"a:{str(WHEEL_ANALOG_PIN)}:i")
-board.analog[WHEEL_ANALOG_PIN].enable_reporting()
+GPIO.setmode(GPIO.BCM)
 
-it = util.Iterator(board)
-it.start()
+GPIO.setup(SPEED_SENSOR, GPIO.IN)
 
-last_status = None
-last_true_time = None
-speed = 0 # meters / second
+last_speed_value = 0
+last_speed_time = time.time()
+speed = 0 # Speed of bicycle in meters per second
 
-while True:
-    wheel_reading = wheel_sensor.read()
+try:
+    while True:
+        speed_value = GPIO.input(SPEED_SENSOR) == 0 # True when magnet is detected
+        speed_value_changed = speed_value != last_speed_value
 
-    if wheel_reading and wheel_reading < 0.3:
-        status = True
-    else:
-        status = False
+        now = time.time()
+        if True:
+                delta_time = now - last_speed_time
+                if delta_time >= STOPPED_THRESHOLD:
+                        speed = 0
+                        last_speed_time = now
+                elif speed_value_changed and speed_value:
+                        print("Setting new speed")
+                        speed = WHEEL_CIRCUMFERENCE / delta_time
+                        last_speed_time = now
 
-    #print(f"CHANGE: {status != last_status} | NEW: {status} | LAST: {last_status} | {wheel_reading}")
+        print(f"{speed} m/s | {speed * 3.6} km/h")
 
-    now = time.time()
-    if last_true_time != None:
-        diff = now - last_true_time
+        last_speed_value = speed_value
+        time.sleep(POLLING_DELAY)
 
-        if status and status != last_status: # if it just turned true
-            speed = WHEEL_CIRCUMEFRENCE / diff # calculate speed in meters per second
-        elif diff > 3: # if it's not gotten a new reading in 3 seconds, assume that it's stopped
-            diff = now
-            speed = 0
-
-    if status:
-        last_true_time = now
-
-    last_status = status
-
-    print(f"SPEED: {speed} m/s | {speed * 3.6} km/h")
-    time.sleep(0.05)
-
-    
+except KeyboardInterrupt:
+    # Cleanup GPIO settings before exiting
+    GPIO.cleanup()
