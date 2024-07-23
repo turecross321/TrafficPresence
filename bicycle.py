@@ -11,9 +11,9 @@ GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(SPEED_SENSOR, GPIO.IN)
 
-last_speed_value = 0
-last_speed_time = time.time()
 speed = 0 # Speed of bicycle in meters per second
+last_speed_value = speed
+last_speed_time = time.time()
 
 try:
     while True:
@@ -21,15 +21,14 @@ try:
         speed_value_changed = speed_value != last_speed_value
 
         now = time.time()
-        if True:
-                delta_time = now - last_speed_time
-                if delta_time >= STOPPED_THRESHOLD:
-                        speed = 0
-                        last_speed_time = now
-                elif speed_value_changed and speed_value:
-                        print("Setting new speed")
-                        speed = WHEEL_CIRCUMFERENCE / delta_time
-                        last_speed_time = now
+        delta_time = now - last_speed_time
+        if delta_time >= STOPPED_THRESHOLD:
+                speed = 0
+                last_speed_time = now
+        elif speed_value_changed and speed_value:
+                print("Setting new speed")
+                speed = WHEEL_CIRCUMFERENCE / delta_time
+                last_speed_time = now
 
         print(f"{speed} m/s | {speed * 3.6} km/h")
 
