@@ -13,8 +13,8 @@ CADENCE_SENSOR = 24 # physical pin 18
 
 POLLING_DELAY = 0.0
 WHEEL_CIRCUMFERENCE = 1.885 # In meters
-SPEED_STOPPED_THRESHOLD = 3 # Amount of seconds before assuming that the bicycle has stopped moving
-CADENCE_STOPPED_THRESHOLD = 2
+SPEED_STOPPED_THRESHOLD = 4 # Amount of seconds before assuming that the bicycle has stopped moving
+CADENCE_STOPPED_THRESHOLD = 10
 
 CLIENT_TYPE_SENDER = 1
 
@@ -80,11 +80,11 @@ try:
         if now - last_discord_update_time >= DISCORD_UPDATE_INTERVAL:
                 message = {
                 "state": "Cycling",
-                "details": f"{int(speed * 3.6)} km/h | {int(cadence)} RPM",
+                "details": f"{int(round(speed * 3.6, 1))} km/h | {int(cadence)} RPM",
                 "timestamps": {"start": start_time},
                 "assets": {
-                        "large_image": "bicycle", 
-                        "large_text": "Kayoba Elegance 28\""
+                        "large_image": "kayoba-florida", 
+                        "large_text": "KAYOBA Florida 28\""
                         }
                 }
                 serialized = json.dumps(message)
