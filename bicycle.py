@@ -80,7 +80,7 @@ try:
         if now - last_discord_update_time >= DISCORD_UPDATE_INTERVAL:
                 message = {
                 "state": "Cycling",
-                "details": f"{int(speed)} km/h | {int(cadence)} RPM",
+                "details": f"{int(speed * 3.6)} km/h | {int(cadence)} RPM",
                 "timestamps": {"start": start_time},
                 "assets": {
                         "large_image": "bicycle", 
