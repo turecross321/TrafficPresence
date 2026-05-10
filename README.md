@@ -13,3 +13,12 @@ Uses Raspberry Pi GPIO pins and two KY-035 sensors to determine speed and cadenc
 Uses a [python-OBD](https://github.com/brendan-w/python-OBD) capable OBD adapter to determine car information.
 
 See [turecross321/car-shenanigans](https://github.com/turecross321/car-shenanigans/blob/main/discord_rich_presence.py) for non-RemoteRichPresence version.
+
+# Videos
+
+
+https://github.com/user-attachments/assets/27371629-f699-4f05-ac54-bbed2a5aba16
+
+
+https://github.com/user-attachments/assets/0f4e3538-b380-4a13-8adc-82af378c4fb8
+
